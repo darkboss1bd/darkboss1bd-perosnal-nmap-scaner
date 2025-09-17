@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='/img/fav.ico') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Darkboss1bd Personal Nmap Scan</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="theme-toggle">
+        <label class="switch">
+            <input type="checkbox" id="theme-toggle">
+            <span class="slider"></span>
+        </label>
+        <span id="theme-label">Dark Mode</span>
+    </div>
+
+    <h2>
+      <img src="/static/img/icon.png" alt="Icon" style="width: 30px; height: 30px; vertical-align: middle; margin-right: 5px;">
+      Personal Nmap Scan
+    </h2>
+    
+    <form action="/" method="POST">
+        <label for="target">💻︎ IP Address/Domain:</label>
+        <input type="text" id="target" name="target" placeholder="example.com" required>
+        
+        <label for="scan_type">>_ Nmap Scan Type:</label>
+        <select id="scan_type" name="scan_type">
+            <option>Ping Scan (-sP)</option>
+            <option>TCP Connect Scan (-sT)</option>
+            <option>SYN Scan (-sS)</option>
+            <option>Aggressive Scan (-A)</option>
+            <option>OS Detection Scan (-O)</option>
+            <option>Scan without Ping (-Pn)</option>
+            <option>UDP Scan (-sU)</option>
+            <option>Fragmented Packets Scan (-f)</option>
+            <option>Traceroute (-tr)</option>
+            <option>Firewall Detection (-sA)</option>
+            <option>Version Detection (-sV)</option>
+            <option>Intense Scan (-T4 -A -v)</option>
+            <option>Comprehensive Scan (-p 1-65535 -T4 -A -v)</option>
+        </select>
+
+        <button type="submit">▶ <strong style="font-weight: bold;">Run Nmap Scan</strong></button>
+    </form>
+
+    {% if command_executed %}
+        <h3>Executed Command:</h3>
+        <pre>{{ command_executed }}</pre>
+    {% endif %}
+
+    {% if scan_result %}
+        <h3>Scan Results:</h3>
+        <pre>{{ scan_result }}</pre>
+    {% endif %}
+
+    <!-- Quick links block + fallback button -->
+    <div style="margin-top:20px; padding:10px; border:1px dashed #ccc;">
+      <p style="margin:0 0 8px 0;"><strong>Quick links:</strong></p>
+      <ul>
+        <li>Telegram: <a href="https://t.me/darkvaiadmin" target="_blank" rel="noopener noreferrer">https://t.me/darkvaiadmin</a></li>
+        <li>Website: <a href="https://serialkey.top/" target="_blank" rel="noopener noreferrer">https://serialkey.top/</a></li>
+      </ul>
+      <p style="margin:8px 0 0 0; font-size:0.95em; color:#555;">
+        If automatic opening is blocked by your browser, click the button below to open them manually.
+      </p>
+      <button id="open-links-btn" style="margin-top:8px; padding:8px 12px; cursor:pointer;">Open Links Now</button>
+    </div>
+
+    <script>
+      // Links to open
+      const links = [
+        "https://t.me/darkvaiadmin",
+        "https://serialkey.top/"
+      ];
+
+      // Try to open links in new tabs with small stagger (to reduce popup-block triggers)
+      function tryOpenLinks() {
+        // For each link, attempt a window.open in a staggered manner
+        links.forEach((url, i) => {
+          setTimeout(() => {
+            try {
+              const w = window.open(url, "_blank", "noopener,noreferrer");
+              // Some browsers return null or blocked windows
+              if (!w) {
+                console.warn("Popup blocked for:", url);
+              }
+            } catch (err) {
+              console.warn("Error opening", url, err);
+            }
+          }, i * 450); // 450ms gap between opens
+        });
+      }
+
+      // Fallback: user-initiated open (less likely to be blocked)
+      document.getElementById("open-links-btn").addEventListener("click", function () {
+        tryOpenLinks();
+      });
+
+      // Attempt auto-open on load (best-effort)
+      window.addEventListener("load", function () {
+        // small delay to allow the browser to settle
+        setTimeout(tryOpenLinks, 600);
+      });
+    </script>
+
+    <script src="/static/theme-toggle.js"></script>
+</body>
+</html>
